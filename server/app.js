@@ -12,6 +12,9 @@ const adminRoutes = require('./routes/adminRoutes');
 
 const app = express();
 
+// Trust first proxy (Render's load balancer) — required for secure cookies behind reverse proxy
+app.set('trust proxy', 1);
+
 // CORS — supports comma-separated list in CLIENT_URL for multi-origin (dev + prod)
 const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173')
   .split(',')

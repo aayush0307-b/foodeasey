@@ -2,9 +2,11 @@ services:
   - type: web
     name: foodeasey-api
     runtime: node
+    nodeVersion: "18"
     rootDir: server
     buildCommand: npm install
     startCommand: npm start
+    healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
         value: production
