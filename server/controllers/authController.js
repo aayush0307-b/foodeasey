@@ -76,9 +76,12 @@ const login = async (req, res, next) => {
 // @access  Private
 const logout = async (req, res, next) => {
   try {
+    const isProduction = process.env.NODE_ENV === 'production';
     res.cookie('token', '', {
       httpOnly: true,
       expires: new Date(0),
+      sameSite: isProduction ? 'none' : 'lax',
+      secure: isProduction,
     });
     sendResponse(res, 200, true, 'Logged out successfully');
   } catch (err) {

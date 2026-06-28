@@ -191,3 +191,83 @@ Visit: **http://localhost:5173**
 ---
 
 Built with ❤️ by the FoodEasey team
+
+---
+
+## 🚀 Production Deployment
+
+### Architecture
+```
+GitHub Repo
+├── client/   →  Vercel  (React / Vite SPA)
+└── server/   →  Render  (Node.js / Express API)
+```
+
+---
+
+### Step 1 — Deploy Backend on Render
+
+1. Go to [render.com](https://render.com) → **New** → **Web Service**
+2. Connect your GitHub repo
+3. Set configuration:
+   | Setting | Value |
+   |---|---|
+   | **Root Directory** | `server` |
+   | **Build Command** | `npm install` |
+   | **Start Command** | `npm start` |
+   | **Instance Type** | Free |
+
+4. Add the following **Environment Variables** in Render dashboard:
+
+   | Key | Value |
+   |---|---|
+   | `NODE_ENV` | `production` |
+   | `PORT` | `10000` |
+   | `MONGO_URI` | `mongodb+srv://...` (MongoDB Atlas URI) |
+   | `JWT_SECRET` | A long random secret string |
+   | `JWT_EXPIRE` | `7d` |
+   | `CLIENT_URL` | *(leave blank for now — add Vercel URL after Step 2)* |
+
+5. Click **Create Web Service**. Note the URL: `https://foodeasey-api.onrender.com`
+
+---
+
+### Step 2 — Deploy Frontend on Vercel
+
+1. Go to [vercel.com](https://vercel.com) → **New Project** → Import your GitHub repo
+2. Set configuration:
+   | Setting | Value |
+   |---|---|
+   | **Root Directory** | `client` |
+   | **Framework Preset** | Vite |
+   | **Build Command** | `npm run build` |
+   | **Output Directory** | `dist` |
+
+3. Add **Environment Variable**:
+
+   | Key | Value |
+   |---|---|
+   | `VITE_API_URL` | `https://foodeasey-api.onrender.com/api` |
+
+4. Click **Deploy**. Note your Vercel URL: `https://foodeasey.vercel.app`
+
+---
+
+### Step 3 — Link Frontend URL in Render
+
+Go back to Render → your Web Service → **Environment** and set:
+
+| Key | Value |
+|---|---|
+| `CLIENT_URL` | `https://foodeasey.vercel.app` |
+
+Click **Save Changes** — Render will auto-redeploy.
+
+---
+
+### ⚠️ Important Notes
+
+- **Cross-origin cookies**: This app uses `HttpOnly` cookies for auth. The server is configured with `sameSite: 'none'` and `secure: true` in production so cookies work across Vercel ↔ Render domains.
+- **MongoDB Atlas**: Make sure your Atlas cluster has **Network Access** set to `0.0.0.0/0` (allow all IPs) since Render uses dynamic IPs.
+- **Render free tier**: The free tier spins down after inactivity. The first request after sleep takes ~30 seconds.
+- **Seed data**: After deployment, you can run `npm run seed` in Render's **Shell** tab to populate the database.

@@ -12,10 +12,19 @@ const adminRoutes = require('./routes/adminRoutes');
 
 const app = express();
 
-// CORS
+// CORS — supports comma-separated list in CLIENT_URL for multi-origin (dev + prod)
+const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173')
+  .split(',')
+  .map((o) => o.trim());
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    origin: (origin, callback) => {
+      // Allow requests with no origin (e.g. curl, Postman, server-to-server)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      return callback(new Error(`CORS: Origin '${origin}' not allowed`));
+    },
     credentials: true,
   })
 );
