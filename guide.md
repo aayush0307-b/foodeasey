@@ -47,24 +47,24 @@ MongoDB Atlas (Mongoose ODM)
 
 ## 2. Tech Stack & Why Each Was Chosen
 
-| Technology | Version | Role | Reason |
-|---|---|---|---|
-| React 18 | ^18 | UI Framework | Component model, hooks, fast re-renders |
-| Vite | ^8 | Build tool | Instant dev server, fast HMR |
-| Tailwind CSS | v3 | Styling | Utility-first, no CSS file maintenance |
-| React Router DOM | v6 | Client routing | Declarative routes, nested layouts |
-| Axios | latest | HTTP client | Interceptors, withCredentials support |
-| react-hot-toast | latest | Notifications | Lightweight, beautiful toasts |
-| react-icons | latest | Icon library | Feather + Material icons |
-| Node.js | 18+ | Runtime | Non-blocking I/O, npm ecosystem |
-| Express | v5 | Web framework | Minimal, native async support in v5 |
-| Mongoose | v9 | ODM | Schema validation, middleware hooks |
-| MongoDB Atlas | cloud | Database | Managed cloud MongoDB |
-| jsonwebtoken | ^9 | JWT signing | Industry standard auth tokens |
-| bcryptjs | ^3 | Password hashing | Pure-JS bcrypt, no native deps |
-| cookie-parser | latest | Cookie reading | Read HttpOnly cookies in Express |
-| cors | latest | CORS policy | Allow cross-origin requests from React |
-| dotenv/dotenvx | latest | Env management | Loads .env variables |
+| Technology       | Version | Role             | Reason                                  |
+| ---------------- | ------- | ---------------- | --------------------------------------- |
+| React 18         | ^18     | UI Framework     | Component model, hooks, fast re-renders |
+| Vite             | ^8      | Build tool       | Instant dev server, fast HMR            |
+| Tailwind CSS     | v3      | Styling          | Utility-first, no CSS file maintenance  |
+| React Router DOM | v6      | Client routing   | Declarative routes, nested layouts      |
+| Axios            | latest  | HTTP client      | Interceptors, withCredentials support   |
+| react-hot-toast  | latest  | Notifications    | Lightweight, beautiful toasts           |
+| react-icons      | latest  | Icon library     | Feather + Material icons                |
+| Node.js          | 18+     | Runtime          | Non-blocking I/O, npm ecosystem         |
+| Express          | v5      | Web framework    | Minimal, native async support in v5     |
+| Mongoose         | v9      | ODM              | Schema validation, middleware hooks     |
+| MongoDB Atlas    | cloud   | Database         | Managed cloud MongoDB                   |
+| jsonwebtoken     | ^9      | JWT signing      | Industry standard auth tokens           |
+| bcryptjs         | ^3      | Password hashing | Pure-JS bcrypt, no native deps          |
+| cookie-parser    | latest  | Cookie reading   | Read HttpOnly cookies in Express        |
+| cors             | latest  | CORS policy      | Allow cross-origin requests from React  |
+| dotenv/dotenvx   | latest  | Env management   | Loads .env variables                    |
 
 ---
 
@@ -164,6 +164,7 @@ foodeasey/
 ## 4. Environment Variables
 
 ### server/.env
+
 ```
 PORT=5000
 MONGO_URI=mongodb+srv://<user>:<pass>@cluster.mongodb.net/foodeasey
@@ -174,6 +175,7 @@ NODE_ENV=development
 ```
 
 ### client/.env
+
 ```
 VITE_API_URL=http://localhost:5000/api
 ```
@@ -185,6 +187,7 @@ VITE_API_URL=http://localhost:5000/api
 ### 5.1 Entry Point: server.js + app.js
 
 **server.js** — Process start:
+
 ```
 1. require('dotenv').config() — loads .env
 2. const app = require('./app')
@@ -193,6 +196,7 @@ VITE_API_URL=http://localhost:5000/api
 ```
 
 **app.js** — Express configuration:
+
 ```
 1. cors({ origin: CLIENT_URL, credentials: true })
 2. express.json() — parse JSON bodies
@@ -223,9 +227,9 @@ const conn = await mongoose.connect(process.env.MONGO_URI);
 
 ### 5.3 config/jwt.js
 
-| Function | What it does |
-|---|---|
-| signToken(id) | jwt.sign({ id }, JWT_SECRET, { expiresIn: '7d' }) — creates signed token |
+| Function           | What it does                                                             |
+| ------------------ | ------------------------------------------------------------------------ |
+| signToken(id)      | jwt.sign({ id }, JWT_SECRET, { expiresIn: '7d' }) — creates signed token |
 | verifyToken(token) | jwt.verify(token, JWT_SECRET) — decodes and validates, throws if expired |
 
 ---
@@ -367,6 +371,7 @@ NODE_ENV=production  → stack omitted
 ### 5.6 Controllers
 
 All follow this pattern (Express 5 compatible):
+
 ```javascript
 const action = async (req, res, next) => {
   try {
@@ -379,52 +384,53 @@ const action = async (req, res, next) => {
 
 #### authController.js
 
-| Function | What it does |
-|---|---|
-| register | validate → check duplicate email → User.create() → generateToken() → send user |
-| login | find user +password → matchPassword() → generateToken() → send user |
-| logout | res.cookie('token', '', { expires: new Date(0) }) — clears cookie |
-| getMe | User.findById(req.user._id) → return user |
-| updateProfile | find user → update fields → user.save() → return updated |
+| Function      | What it does                                                                   |
+| ------------- | ------------------------------------------------------------------------------ |
+| register      | validate → check duplicate email → User.create() → generateToken() → send user |
+| login         | find user +password → matchPassword() → generateToken() → send user            |
+| logout        | res.cookie('token', '', { expires: new Date(0) }) — clears cookie              |
+| getMe         | User.findById(req.user.\_id) → return user                                     |
+| updateProfile | find user → update fields → user.save() → return updated                       |
 
 #### vendorController.js
 
-| Function | What it does |
-|---|---|
-| getVendors | query with search(regex), isOpen, city → Vendor.find().sort(rating) |
-| getVendorById | Vendor.findById() + Food.find({vendorId}) → { vendor, foods } |
-| createVendor | Vendor.create({ ...body, ownerId: req.user._id }) |
-| updateVendor | Vendor.findByIdAndUpdate(id, body, {new:true, runValidators}) |
-| getMyVendor | Vendor.findOne({ ownerId: req.user._id }) + its foods |
+| Function      | What it does                                                        |
+| ------------- | ------------------------------------------------------------------- |
+| getVendors    | query with search(regex), isOpen, city → Vendor.find().sort(rating) |
+| getVendorById | Vendor.findById() + Food.find({vendorId}) → { vendor, foods }       |
+| createVendor  | Vendor.create({ ...body, ownerId: req.user.\_id })                  |
+| updateVendor  | Vendor.findByIdAndUpdate(id, body, {new:true, runValidators})       |
+| getMyVendor   | Vendor.findOne({ ownerId: req.user.\_id }) + its foods              |
 
 #### foodController.js
 
-| Function | What it does |
-|---|---|
-| getFoods | Multi-filter: search regex, category, vendorId, isVeg, price range |
-| getPopularFoods | isAvailable:true, sort rating+totalRatings, limit 10 |
-| getFoodById | Food.findById().populate('vendorId') |
-| getFoodsByVendor | Food.find({ vendorId, isAvailable:true }) |
-| createFood | Food.create(req.body) |
-| updateFood | Food.findByIdAndUpdate(id, body, {new:true}) |
-| deleteFood | Food.findByIdAndDelete(id) |
+| Function         | What it does                                                       |
+| ---------------- | ------------------------------------------------------------------ |
+| getFoods         | Multi-filter: search regex, category, vendorId, isVeg, price range |
+| getPopularFoods  | isAvailable:true, sort rating+totalRatings, limit 10               |
+| getFoodById      | Food.findById().populate('vendorId')                               |
+| getFoodsByVendor | Food.find({ vendorId, isAvailable:true })                          |
+| createFood       | Food.create(req.body)                                              |
+| updateFood       | Food.findByIdAndUpdate(id, body, {new:true})                       |
+| deleteFood       | Food.findByIdAndDelete(id)                                         |
 
 #### orderController.js
 
-| Function | What it does |
-|---|---|
-| placeOrder | validate items → Order.create({ userId: req.user._id, ...}) |
-| getMyOrders | Order.find({ userId }).populate('vendorId').sort(-createdAt) |
-| getOrderById | findById, check ownership, populate userId+vendorId |
-| updateOrderStatus | findByIdAndUpdate({ status }) |
-| getVendorOrders | Order.find({ vendorId }).populate('userId') |
-| cancelOrder | find → check status==='pending' → set cancelled → save |
+| Function          | What it does                                                 |
+| ----------------- | ------------------------------------------------------------ |
+| placeOrder        | validate items → Order.create({ userId: req.user.\_id, ...}) |
+| getMyOrders       | Order.find({ userId }).populate('vendorId').sort(-createdAt) |
+| getOrderById      | findById, check ownership, populate userId+vendorId          |
+| updateOrderStatus | findByIdAndUpdate({ status })                                |
+| getVendorOrders   | Order.find({ vendorId }).populate('userId')                  |
+| cancelOrder       | find → check status==='pending' → set cancelled → save       |
 
 ---
 
 ### 5.7 Routes
 
 #### authRoutes.js
+
 ```
 POST   /api/auth/register       → register        (public)
 POST   /api/auth/login          → login           (public)
@@ -434,6 +440,7 @@ PUT    /api/auth/profile        → updateProfile   (protect)
 ```
 
 #### vendorRoutes.js
+
 ```
 GET    /api/vendors             → getVendors      (public)
 GET    /api/vendors/my-vendor   → getMyVendor     (protect, vendor/admin)
@@ -446,6 +453,7 @@ NOTE: /my-vendor MUST be before /:id — otherwise Express
 ```
 
 #### foodRoutes.js
+
 ```
 GET    /api/foods               → getFoods        (public)
 GET    /api/foods/popular       → getPopularFoods (public)
@@ -457,6 +465,7 @@ DELETE /api/foods/:id           → deleteFood      (protect, vendor/admin)
 ```
 
 #### orderRoutes.js
+
 ```
 POST   /api/orders              → placeOrder      (protect)
 GET    /api/orders/my-orders    → getMyOrders     (protect)
@@ -471,8 +480,9 @@ PUT    /api/orders/:id/cancel   → cancelOrder     (protect)
 ### 5.8 Utilities
 
 #### utils/generateToken.js
+
 ```javascript
-generateToken(res, userId)
+generateToken(res, userId);
 // 1. token = jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: '7d' })
 // 2. res.cookie('token', token, {
 //      httpOnly: true,     ← JS cannot read → XSS protection
@@ -484,8 +494,9 @@ generateToken(res, userId)
 ```
 
 #### utils/sendResponse.js
+
 ```javascript
-sendResponse(res, statusCode, success, message, data)
+sendResponse(res, statusCode, success, message, data);
 // Always returns: { success, message, data? }
 // data is omitted if null
 // Ensures every API endpoint has the same response shape
@@ -519,6 +530,7 @@ Test credentials after seeding:
 ### 6.1 Entry Point: main.jsx + App.jsx
 
 **main.jsx** — Provider nesting order (outermost → innermost):
+
 ```
 <BrowserRouter>         ← Enables React Router
   <AuthProvider>        ← Global auth state
@@ -534,6 +546,7 @@ Test credentials after seeding:
 ### 6.2 Tailwind Design System (tailwind.config.js)
 
 #### Colors
+
 ```
 primary.DEFAULT  #FF5A5F   Coral Red — brand color
 secondary        #1F2937   Dark blue-gray — text, nav
@@ -546,6 +559,7 @@ error            #EF4444   Red — Cancelled, delete
 ```
 
 #### Custom Shadows
+
 ```
 card:         0 4px 20px rgba(0,0,0,0.08)         default card
 card-hover:   0 8px 40px rgba(0,0,0,0.14)         elevated on hover
@@ -553,6 +567,7 @@ primary:      0 4px 20px rgba(255,90,95,0.35)     coral glow on buttons
 ```
 
 #### Animations
+
 ```
 float:     translateY 0 → -10px → 0 (food emojis)
 fade-in:   opacity 0 → 1
@@ -562,6 +577,7 @@ scale-in:  scale(0.95) → scale(1)
 ```
 
 #### Font
+
 ```
 Poppins from Google Fonts
 Weights: 300, 400, 500, 600, 700, 800, 900
@@ -574,22 +590,22 @@ Loaded in index.html <head> via preconnect + stylesheet links
 
 Defined in @layer components — usable as Tailwind classes:
 
-| Class | Description |
-|---|---|
-| .btn-primary | Coral filled button with glow shadow |
-| .btn-outline | Border button, fills on hover |
-| .btn-ghost | Transparent button with hover bg |
-| .card | White rounded-2xl with shadow-card |
-| .input-field | Styled input with focus ring |
-| .badge | Small inline pill |
-| .badge-primary/success/warning/error | Colored badge variants |
-| .section-title | Large bold section heading |
-| .gradient-text | Coral-to-orange gradient on text |
-| .page-container | max-w-7xl mx-auto px-4 — content wrapper |
-| .hero-bg | Dark gradient background for hero section |
-| .skeleton | Animated gray loading placeholder |
-| .hide-scrollbar | Hides scrollbar (for category row) |
-| .glass | backdrop-blur frosted glass effect |
+| Class                                | Description                               |
+| ------------------------------------ | ----------------------------------------- |
+| .btn-primary                         | Coral filled button with glow shadow      |
+| .btn-outline                         | Border button, fills on hover             |
+| .btn-ghost                           | Transparent button with hover bg          |
+| .card                                | White rounded-2xl with shadow-card        |
+| .input-field                         | Styled input with focus ring              |
+| .badge                               | Small inline pill                         |
+| .badge-primary/success/warning/error | Colored badge variants                    |
+| .section-title                       | Large bold section heading                |
+| .gradient-text                       | Coral-to-orange gradient on text          |
+| .page-container                      | max-w-7xl mx-auto px-4 — content wrapper  |
+| .hero-bg                             | Dark gradient background for hero section |
+| .skeleton                            | Animated gray loading placeholder         |
+| .hide-scrollbar                      | Hides scrollbar (for category row)        |
+| .glass                               | backdrop-blur frosted glass effect        |
 
 ---
 
@@ -651,6 +667,7 @@ Key behaviour of addToCart:
 ### 6.5 Service Layer (Axios)
 
 #### services/api.js — Base Instance
+
 ```javascript
 axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -664,18 +681,18 @@ Response interceptor:
 ```
 
 WHY withCredentials: true?
-  JWT lives in HttpOnly cookie. Browser only sends cookies
-  cross-origin when withCredentials is true AND server CORS
-  has credentials:true + specific origin (not '*').
+JWT lives in HttpOnly cookie. Browser only sends cookies
+cross-origin when withCredentials is true AND server CORS
+has credentials:true + specific origin (not '\*').
 
 #### Service Files — All return res.data.data
 
-| File | Key Functions |
-|---|---|
-| authService.js | register, login, logout, getMe, updateProfile |
-| foodService.js | getFoods, getPopularFoods, getFoodById, getFoodsByVendor, createFood, updateFood, deleteFood |
-| vendorService.js | getVendors, getVendorById, getMyVendor, createVendor, updateVendor |
-| orderService.js | placeOrder, getMyOrders, getOrderById, updateOrderStatus, cancelOrder, getVendorOrders |
+| File             | Key Functions                                                                                |
+| ---------------- | -------------------------------------------------------------------------------------------- |
+| authService.js   | register, login, logout, getMe, updateProfile                                                |
+| foodService.js   | getFoods, getPopularFoods, getFoodById, getFoodsByVendor, createFood, updateFood, deleteFood |
+| vendorService.js | getVendors, getVendorById, getMyVendor, createVendor, updateVendor                           |
+| orderService.js  | placeOrder, getMyOrders, getOrderById, updateOrderStatus, cancelOrder, getVendorOrders       |
 
 ---
 
@@ -726,6 +743,7 @@ pt-16: padding-top matches fixed Navbar height
 ### 6.8 Components
 
 #### Navbar.jsx
+
 ```
 State:
   mobileOpen  → mobile hamburger menu open/closed
@@ -747,6 +765,7 @@ Features:
 ```
 
 #### FoodCard.jsx
+
 ```
 Props: food object
 
@@ -762,6 +781,7 @@ Key features:
 ```
 
 #### VendorCard.jsx
+
 ```
 Props: vendor object
 
@@ -775,6 +795,7 @@ Meta row: deliveryTime, minOrder, city (separated by icons)
 ```
 
 #### CategoryCard.jsx
+
 ```
 Props: category { label, emoji, color }, isActive, onClick
 
@@ -787,6 +808,7 @@ CATEGORIES export (12 items):
 ```
 
 #### SearchBar.jsx
+
 ```
 Props: placeholder, onSearch (callback), className
 
@@ -802,6 +824,7 @@ id: "search-input"
 ```
 
 #### ProtectedRoute.jsx
+
 ```
 Props: children, allowedRoles (optional)
 
@@ -821,6 +844,7 @@ Login stores 'from' location:
 ### 6.9 Pages
 
 #### Home.jsx
+
 ```
 Data: Promise.all([getPopularFoods(), getVendors()]) on mount
 
@@ -858,6 +882,7 @@ Sections:
 ```
 
 #### Login.jsx
+
 ```
 Split layout (hidden on mobile):
   Left panel: dark hero bg + floating food + benefit text
@@ -876,6 +901,7 @@ Google button → toast('coming soon')
 ```
 
 #### Register.jsx
+
 ```
 Form state: { name, email, phone, password, confirmPassword }
 
@@ -894,6 +920,7 @@ On submit: strips confirmPassword → calls register(data) → navigate('/')
 ```
 
 #### Vendors.jsx
+
 ```
 State: vendors, loading, searchQuery, activeFilter, showOpenOnly
 
@@ -910,6 +937,7 @@ Initial URL params (from Home page navigation):
 ```
 
 #### FoodDetails.jsx
+
 ```
 State: food, loading, qty (default 1)
 
@@ -932,6 +960,7 @@ Vendor box: vendor name, open/closed badge
 ```
 
 #### Cart.jsx
+
 ```
 Computed values:
   deliveryFee = cartTotal > 300 ? 0 : 40    (free delivery promotion)
@@ -958,6 +987,7 @@ Checkout flow:
 ```
 
 #### Orders.jsx
+
 ```
 Fetches: orderService.getMyOrders() on mount
 
@@ -980,6 +1010,7 @@ OrderCard (defined in same file):
 ```
 
 #### Profile.jsx
+
 ```
 State: editing, loading, form { name, phone, address }
 Form pre-filled from useAuth().user on render
@@ -1000,6 +1031,7 @@ Logout: AuthContext logout() → navigate('/')
 ```
 
 #### VendorDashboard.jsx
+
 ```
 Access: allowedRoles=['vendor','admin'] in ProtectedRoute
 
@@ -1027,6 +1059,7 @@ Stats row (4 cards):
 ```
 
 #### NotFound.jsx
+
 ```
 Centered layout:
   "404" text in border color (acts as watermark)
@@ -1082,7 +1115,7 @@ addToCart(food) called from FoodCard or FoodDetails
     YES → .map() to increment quantity (immutable update)
     NO  → spread: [...prev, { ...food, quantity: 1 }]
   → toast.success()
-  
+
 useEffect on cartItems change:
   localStorage.setItem('foodeasey_cart', JSON.stringify(cartItems))
 
@@ -1141,10 +1174,10 @@ VendorDashboard mounts:
 Dashboard features:
   Add food: foodService.createFood({ ...form, vendorId: vendor._id })
     → Food.create() → prepended to local foods state
-  
+
   Delete food: foodService.deleteFood(id)
     → Food.findByIdAndDelete() → filtered from local foods state
-  
+
   Update order status: select onChange → updateOrderStatus(orderId, status)
     → Order.findByIdAndUpdate({ status }) → updates local orders state
 ```
@@ -1459,6 +1492,7 @@ Frontend: Review form in FoodDetails.jsx (shown only after delivery)
 ## Quick Reference Card
 
 ### Start Development
+
 ```bash
 # Terminal 1
 cd /Users/mac/Documents/Foodeasey/server
@@ -1470,24 +1504,27 @@ npm run dev
 ```
 
 ### Seed Database
+
 ```bash
 cd server && npm run seed
 ```
 
 ### Test Accounts
-| Role   | Email                   | Password    |
-|--------|-------------------------|-------------|
-| User   | user@foodeasey.com      | password123 |
-| Vendor | vendor@foodeasey.com    | password123 |
-| Admin  | admin@foodeasey.com     | admin123    |
+
+| Role   | Email                | Password    |
+| ------ | -------------------- | ----------- |
+| User   | user@foodeasey.com   | password123 |
+| Vendor | vendor@foodeasey.com | password123 |
+| Admin  | admin@foodeasey.com  | admin123    |
 
 ### Key URLs
-| Service   | URL                              |
-|-----------|----------------------------------|
-| Frontend  | http://localhost:5173            |
-| Backend   | http://localhost:5000            |
-| Health    | http://localhost:5000/api/health |
+
+| Service  | URL                              |
+| -------- | -------------------------------- |
+| Frontend | http://localhost:5173            |
+| Backend  | http://localhost:5000            |
+| Health   | http://localhost:5000/api/health |
 
 ---
 
-*FoodEasey Developer Guide — v1.0*
+_FoodEasey Developer Guide — v2.0_
