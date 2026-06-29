@@ -16,16 +16,26 @@ const app = express();
 app.set('trust proxy', 1);
 
 // CORS — supports comma-separated list in CLIENT_URL for multi-origin (dev + prod)
-const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173')
-  .split(',')
-  .map((o) => o.trim());
+// Production Vercel URL is always included as a guaranteed fallback
+const PRODUCTION_ORIGIN = 'https://foodeasey.vercel.app';
+
+const allowedOrigins = [
+  PRODUCTION_ORIGIN,
+  ...( process.env.CLIENT_URL || 'http://localhost:5173')
+    .split(',')
+    .map((o) => o.trim()),
+];
+
+// Deduplicate in case CLIENT_URL already contains the production URL
+const uniqueAllowedOrigins = [...new Set(allowedOrigins)];
 
 app.use(
   cors({
     origin: (origin, callback) => {
       // Allow requests with no origin (e.g. curl, Postman, server-to-server)
       if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin)) return callback(null, true);
+      if (uniqueAllowedOrigins.includes(origin)) return callback(null, true);
+      // Return a proper CORS error — Express will forward to the error handler
       return callback(new Error(`CORS: Origin '${origin}' not allowed`));
     },
     credentials: true,
