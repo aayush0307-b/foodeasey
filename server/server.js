@@ -17,8 +17,8 @@ if (missing.length > 0) {
 const PORT = process.env.PORT || 5000;
 
 connectDB().then(() => {
-  const server = app.listen(PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
+  const server = app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Server running on http://0.0.0.0:${PORT}`);
     console.log(`📱 Client URL: ${process.env.CLIENT_URL}`);
     console.log(`🌍 Environment: ${process.env.NODE_ENV}`);
   });
